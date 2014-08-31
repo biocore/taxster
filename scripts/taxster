@@ -10,7 +10,6 @@
 # ----------------------------------------------------------------------------
 
 import taxster.cli as cli
-import taxster.api as api
 
 
 if __name__ == '__main__':
