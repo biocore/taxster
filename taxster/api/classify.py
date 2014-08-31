@@ -1,13 +1,6 @@
-from collections import defaultdict
-
-import pandas as pd
-from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import HashingVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.preprocessing import LabelEncoder
-
-from taxster import logging
-from ..load import load_taxonomy, load_seqs
+from ..load import load_training_set
+from ..fit import fit_classifier
+from ..predict import predict_labels
 
 
 def classify(training_seqs, query_seqs, taxonomy, rank, ngram_range):
@@ -28,55 +21,17 @@ def classify(training_seqs, query_seqs, taxonomy, rank, ngram_range):
 
     Returns
     -------
-    pandas.DataFrame
-        The corresponding classifications
+    taxon labels
+        The taxon labels that can be predicted
+    generator
+        A generator that yields sequence IDs and probabilities of
+        classification for each label. The probabilities are in index order
+        with the taxon labels.
 
     Examples
     --------
 
     """
-    logging.info('Loading taxonomy')
-    tax_table = load_taxonomy(taxonomy)
-    logging.info('Loaded %d taxonomic descriptions' % len(tax_table))
-
-    logging.info('Loading training sequences')
-    load_seqs(training_seqs, tax_table)
-
-    n_labels = len(set(tax_table[rank]))
-    logging.info('Training set has %s different labels' % n_labels)
-
-    logging.info('Classifying at %s rank' % rank)
-
-    # transform labels
-    label_encoder = LabelEncoder()
-    logging.info('Transforming labels using %s' % label_encoder)
-    tax_table.label = label_encoder.fit_transform(tax_table[rank])
-
-    # define transformation and classification pipeline
-    hasher = HashingVectorizer(analyzer='char',
-                               ngram_range=ngram_range,
-                               non_negative=True)
-
-    classifier = MultinomialNB()
-
-    pipeline = Pipeline([('transformer', hasher),
-                         ('classifier', classifier)])
-
-    # fit the classifier
-    logging.info('Fitting classifier')
-    pipeline.fit(tax_table.sequence, tax_table.label)
-
-    # iterate over query sequences, predicting probabilites for each
-    # store probabilities in a matrix (DataFrame) with database ID
-    # as the column and sequence ID as the row
-
-    target_record_proba = defaultdict(dict)
-
-    # this will be prohibitive for large datasets, so it would be useful to
-    # filter. Could do this as a generator too
-    for rec in query_seqs:
-        probs = pipeline.predict_proba([rec['Sequence']])
-        for t, p in zip(tax_table[rank], probs[0]):
-            target_record_proba[t][rec['SequenceID']] = p
-
-    return pd.DataFrame.from_dict(target_record_proba)
+    tax_table = load_training_set(taxonomy, training_seqs, rank)
+    pipeline = fit_classifier(tax_table, ngram_range)
+    return (tax_table[rank], predict_labels(query_seqs, pipeline))
