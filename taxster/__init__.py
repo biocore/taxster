@@ -1,17 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # ----------------------------------------------------------------------------
-# Copyright (c) 2014, The Taxster Development Team.
+# Copyright (c) 2011-2013, The BIOM Format Development Team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
 # The full license is in the file COPYING.txt, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import taxster.cli as cli
-import taxster.api as api
-
-
-if __name__ == '__main__':
-    cli.main()
+__version__ = '0.0.1'
