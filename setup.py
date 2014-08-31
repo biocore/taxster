@@ -70,9 +70,11 @@ setup(name='taxster',
       include_dirs=[np.get_include()],
       scripts=glob('bin/*'),
       install_requires=["numpy >= 1.8.2",
+                        "future",
                         "scipy >= 0.14.0",
                         "scikit-learn == 0.15.1",
                         "scikit-bio == 0.2.0"],
-      extras_require={'test': ["nose >= 0.10.1", "pep8", "flake8"]},
+      extras_require={'test': ["nose >= 0.10.1", "pep8", "flake8"],
+                      'doc': ["Sphinx >= 1.2.2"]},
       classifiers=classifiers
       )
