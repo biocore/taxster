@@ -47,9 +47,9 @@ def classify(ctx, **kwargs):
     labels, probs = classify_(training_seqs, query_seqs, taxonomy, **kwargs)
 
     logging.info('Writing to %s...' % output.name)
-    output.write("\t".join(["#SequenceID", "label", "probability"]) + '\n')
+    output.write("#SequenceID\tlabel\tprobability\n")
     for seq_id, label_probs in probs:
         idx = np.argmax(label_probs)
-        output.write("\t".join([seq_id, labels[idx], str(label_probs[idx])]))
-        output.write('\n')
+        output.write("%s\t%s\t%s\n" % (seq_id, labels[idx],
+                                       str(label_probs[idx])))
     logging.info('Done!')
