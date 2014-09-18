@@ -4,4 +4,4 @@
 
 ### Features
 
-* Existance!
+* Existence!
