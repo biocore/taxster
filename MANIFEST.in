@@ -1,0 +1,10 @@
+include CHANGELOG.md
+include README.me
+include LICENSE
+
+graft doc
+
+prune doc/_build
+
+global-exclude *.pyc
+global-exclude *.pyo
