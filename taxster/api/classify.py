@@ -22,7 +22,7 @@ def classify(training_seqs, query_seqs, taxonomy, rank, ngram_range):
 
     Returns
     -------
-    taxon labels
+    list of str
         The taxon labels that can be predicted
     generator
         A generator that yields sequence IDs and probabilities of
