@@ -38,7 +38,8 @@ __version__ = "0.0.1"
 __maintainer__ = "Daniel McDonald"
 __email__ = "mcdonadt@colorado.edu"
 
-long_description = """Assigning taxons you've never heard of"""
+long_description = ("taxster: assigning taxonomy to organisms you've never "
+                    "even heard of")
 
 classes = """
     Development Status :: 4 - Beta
