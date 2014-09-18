@@ -17,7 +17,8 @@ def classify(training_seqs, query_seqs, taxonomy, rank, ngram_range):
     rank : unsigned int
         The depth from the root of the taxonomy to classify at where 0 is
         domain, and 6 is species.
-    ngram_range : ???
+    ngram_range : tuple of int
+        Min and max kmer size.
 
     Returns
     -------
@@ -33,5 +34,5 @@ def classify(training_seqs, query_seqs, taxonomy, rank, ngram_range):
 
     """
     tax_table = load_training_set(taxonomy, training_seqs, rank)
-    pipeline = fit_classifier(tax_table, ngram_range)
+    pipeline = fit_classifier(tax_table, ngram_range, classifier_kwargs={'alpha':.01})
     return (tax_table[rank], predict_labels(query_seqs, pipeline))
