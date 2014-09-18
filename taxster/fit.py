@@ -13,7 +13,8 @@ def fit_classifier(table, ngram_range, classifier=MultinomialNB,
     ----------
     table : DataFrame
         The training table
-    ngram_range : ???
+    ngram_range : tuple of int
+        The min and max kmer size.
     classifier : sklearn classifier, optional
         The scikit-learn classifier, defaults to MultinomialNB
     classifier_kwargs : dict, optional
