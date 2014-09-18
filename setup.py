@@ -40,7 +40,7 @@ long_description = ("taxster: assigning taxonomy to organisms you've never "
                     "even heard of")
 
 classes = """
-    Development Status :: 4 - Beta
+    Development Status :: 2 - Pre-Alpha
     License :: OSI Approved :: BSD License
     Topic :: Scientific/Engineering :: Bio-Informatics
     Topic :: Software Development :: Libraries :: Python Modules
