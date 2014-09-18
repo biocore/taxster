@@ -9,9 +9,7 @@
 # The full license is in the file COPYING.txt, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import os
 from setuptools import setup
-from setuptools.extension import Extension
 from glob import glob
 
 try:
