@@ -17,7 +17,7 @@ from glob import glob
 try:
     import numpy as np
 except ImportError:
-    raise ImportError("numpy must be installed prior to installing biom")
+    raise ImportError("numpy must be installed prior to installing taxster")
 
 # Hack to prevent stupid "TypeError: 'NoneType' object is not callable" error
 # in multiprocessing/util.py _exit_function when running `python
