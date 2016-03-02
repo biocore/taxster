@@ -1,5 +1,5 @@
-taxster
-=======
+taxster: assigning taxonomy to organisms you've never even heard of 
+===================================================================
 
 This library contains tools for working with taxonomic assignment data. This should be considered pre-alpha software. **Public APIs can and will change!**
 
