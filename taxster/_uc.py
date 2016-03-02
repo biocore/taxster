@@ -58,7 +58,8 @@ def _uc_to_taxonomy(uc, id_to_taxonomy):
     return results
 
 
-def _compute_consensus_annotations(query_annotations, min_consensus_fraction):
+def _compute_consensus_annotations(query_annotations, min_consensus_fraction,
+                                   unassignable_label):
     """
         Parameters
         ----------
@@ -76,14 +77,15 @@ def _compute_consensus_annotations(query_annotations, min_consensus_fraction):
     result = {}
     for query_id, annotations in query_annotations.iteritems():
         consensus_annotation, consensus_fraction = \
-            _compute_consensus_annotation(annotations, min_consensus_fraction)
+            _compute_consensus_annotation(annotations, min_consensus_fraction,
+                                          unassignable_label)
         result[query_id] = (consensus_annotation, consensus_fraction,
                             len(annotations))
     return result
 
 
 def _compute_consensus_annotation(annotations, min_consensus_fraction,
-                                  unassignable_label="Unknown"):
+                                  unassignable_label):
     """ Consensus the consensus of a collection of annotations
 
         Parameters
@@ -99,6 +101,8 @@ def _compute_consensus_annotation(annotations, min_consensus_fraction,
             Fraction of input annotations that agreed at the deepest
             level of assignment
     """
+    if min_consensus_fraction <= 0.5:
+        raise ValueError("min_consensus_fraction must be greater than 0.5.")
     num_input_annotations = len(annotations)
     consensus_annotation = []
 
