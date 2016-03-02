@@ -6,7 +6,7 @@
 # The full license is in the file COPYING.txt, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import StringIO
+import io
 from unittest import TestCase, main
 
 from taxster._uc import (_compute_consensus_annotation,
@@ -194,7 +194,7 @@ class UcToAssignments(TestCase):
                           'r4': ['A', 'B', 'C', 'E'],
                           'r5': ['A', 'H', 'K', 'L', 'M'],
                           'r6': ['A', 'H', 'I', 'J']}
-        in_ = StringIO.StringIO(uc1)
+        in_ = io.StringIO(uc1)
         actual = _uc_to_taxonomy(in_, id_to_taxonomy)
         self.assertEqual(actual, expected)
 
@@ -216,7 +216,7 @@ class UcConsensusAssignments(TestCase):
                           'r4': ['A', 'B', 'C', 'E'],
                           'r5': ['A', 'H', 'K', 'L', 'M'],
                           'r6': ['A', 'H', 'I', 'J']}
-        in_ = StringIO.StringIO(uc1)
+        in_ = io.StringIO(uc1)
         actual = uc_consensus_assignments(in_, id_to_taxonomy)
         self.assertEqual(actual, expected)
 
@@ -232,12 +232,12 @@ class UcConsensusAssignments(TestCase):
                           'r4': ['A', 'B', 'C', 'E'],
                           'r5': ['A', 'H', 'K', 'L', 'M'],
                           'r6': ['A', 'H', 'I', 'J']}
-        in_ = StringIO.StringIO(uc1)
+        in_ = io.StringIO(uc1)
         actual = uc_consensus_assignments(in_, id_to_taxonomy, 1.0, 'x')
         self.assertEqual(actual, expected)
 
 
-uc1 = """# uclust --input /Users/caporaso/Dropbox/code/short-read...
+uc1 = u"""# uclust --input /Users/caporaso/Dropbox/code/short-read...
 # version=1.2.22
 # Tab-separated fields:
 # 1=Type, 2=ClusterNr, 3=SeqLength or ClusterSize, 4=PctId, ...

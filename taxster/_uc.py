@@ -130,7 +130,7 @@ def _compute_consensus_annotations(query_annotations, min_consensus_fraction,
     # This code has been ported to taxster from QIIME 1.9.1 with
     # permission from @gregcaporaso.
     result = {}
-    for query_id, annotations in query_annotations.iteritems():
+    for query_id, annotations in query_annotations.items():
         consensus_annotation, consensus_fraction = \
             _compute_consensus_annotation(annotations, min_consensus_fraction,
                                           unassignable_label)
