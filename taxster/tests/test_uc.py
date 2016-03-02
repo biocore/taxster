@@ -202,7 +202,7 @@ class UcToAssignments(TestCase):
 class UcConsensusAssignments(TestCase):
 
     # This code has been ported to taxster from QIIME 1.9.1 with
-    # permission from @gregcaporaso. 
+    # permission from @gregcaporaso.
 
     def test_uc_consensus_assignments(self):
         expected = {'q1': (['A', 'B', 'C'], 1.0, 2),

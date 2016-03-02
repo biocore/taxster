@@ -92,7 +92,7 @@ def _uc_to_taxonomy(uc, taxonomy_map):
 
     """
     # This code has been ported to taxster from QIIME 1.9.1 with
-    # permission from @gregcaporaso. 
+    # permission from @gregcaporaso.
     results = defaultdict(list)
     for line in uc:
         line = line.strip()
