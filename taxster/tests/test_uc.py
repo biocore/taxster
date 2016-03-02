@@ -6,9 +6,13 @@
 # The full license is in the file COPYING.txt, distributed with this software.
 # ----------------------------------------------------------------------------
 
+import StringIO
 from unittest import TestCase, main
+
 from taxster._uc import (_compute_consensus_annotation,
-                         _compute_consensus_annotations)
+                         _compute_consensus_annotations,
+                         _uc_to_taxonomy)
+from taxster import uc_consensus_assignments
 
 
 class ConsensusAnnotationTests(TestCase):
@@ -164,53 +168,83 @@ class ConsensusAnnotationsTests(TestCase):
         self.assertEqual(actual, expected)
 
 
+class UcToAssignments(TestCase):
 
-#
-#     def test_uc_to_assignments(self):
-#         """_uc_to_assignments functions as expected"""
-#         expected = {'q1': [['A', 'B', 'C', 'D'],
-#                            ['A', 'B', 'C', 'E']],
-#                     'q2': [['A', 'H', 'I', 'J'],
-#                            ['A', 'H', 'K', 'L', 'M'],
-#                            ['A', 'H', 'I', 'J']],
-#                     'q3': [[]],
-#                     'q4': [[]],
-#                     'q5': [[]]
-#                     }
-#         params = {'id_to_taxonomy_fp': self.id_to_tax1_fp,
-#                   'reference_sequences_fp': self.refseqs1_fp}
-#         t = UclustConsensusTaxonAssigner(params)
-#         actual = t._uc_to_assignments(self.uc1_lines)
-#         self.assertEqual(actual, expected)
-#
-#
-# uc1 = """# uclust --input /Users/caporaso/Dropbox/code/short-read-tax-assignment/data/qiime-mock-community/Broad-1/rep_set.fna --lib /Users/caporaso/data/gg_13_5_otus/rep_set/97_otus.fasta --uc /Users/caporaso/outbox/uclust_tax_parameter_sweep/Broad-1/gg_13_5_otus/uclust/id1.000000_ma3.uc --id 1.00 --maxaccepts 3 --libonly --allhits
-# # version=1.2.22
-# # Tab-separated fields:
-# # 1=Type, 2=ClusterNr, 3=SeqLength or ClusterSize, 4=PctId, 5=Strand, 6=QueryStart, 7=SeedStart, 8=Alignment, 9=QueryLabel, 10=TargetLabel
-# # Record types (field 1): L=LibSeed, S=NewSeed, H=Hit, R=Reject, D=LibCluster, C=NewCluster, N=NoHit
-# # For C and D types, PctId is average id with seed.
-# # QueryStart and SeedStart are zero-based relative to start of sequence.
-# # If minus strand, SeedStart is relative to reverse-complemented seed.
-# N	*	195	*	*	*	*	*	q3	*
-# N	*	191	*	*	*	*	*	q4	*
-# N	*	192	*	*	*	*	*	q5	*
-# L	748	1374	*	*	*	*	*	1081058	*
-# H	r3	193	100.0	+	0	0	534I193M787I	q2	r3
-# H	r5	193	97.0	+	0	0	534I193M787I	q2	r5
-# H	r6	193	97.0	+	0	0	534I193M787I	q2	r6
-# L	92734	1541	*	*	*	*	*	4440404	*
-# H	r2	189	99.0	+	0	0	531I189M821I	q1	r2
-# H	r4	189	100.0	+	0	0	531I189M821I	q1	r4
-# """
-#
-# uclust_id_to_tax1 = """r1	A;F;G
-# r2	A;B;C;D
-# r3	A;H;I;J
-# r4	A;B;C;E
-# r5	A;H;K;L;M
-# r6	A;H;I;J
-# """
+    def test_uc_to_taxonomy(self):
+        expected = {'q1': [['A', 'B', 'C', 'D'],
+                           ['A', 'B', 'C', 'E']],
+                    'q2': [['A', 'H', 'I', 'J'],
+                           ['A', 'H', 'K', 'L', 'M'],
+                           ['A', 'H', 'I', 'J']],
+                    'q3': [[]],
+                    'q4': [[]],
+                    'q5': [[]]}
+        id_to_taxonomy = {'r1': ['A', 'F', 'G'],
+                          'r2': ['A', 'B', 'C', 'D'],
+                          'r3': ['A', 'H', 'I', 'J'],
+                          'r4': ['A', 'B', 'C', 'E'],
+                          'r5': ['A', 'H', 'K', 'L', 'M'],
+                          'r6': ['A', 'H', 'I', 'J']}
+        in_ = StringIO.StringIO(uc1)
+        actual = _uc_to_taxonomy(in_, id_to_taxonomy)
+        self.assertEqual(actual, expected)
+
+
+class UcConsensusAssignments(TestCase):
+
+    def test_uc_consensus_assignments(self):
+        expected = {'q1': (['A', 'B', 'C'], 1.0, 2),
+                    'q2': (['A', 'H', 'I', 'J'], 2. / 3., 3),
+                    'q3': (['Unassigned'], 1.0, 1),
+                    'q4': (['Unassigned'], 1.0, 1),
+                    'q5': (['Unassigned'], 1.0, 1)}
+        id_to_taxonomy = {'r1': ['A', 'F', 'G'],
+                          'r2': ['A', 'B', 'C', 'D'],
+                          'r3': ['A', 'H', 'I', 'J'],
+                          'r4': ['A', 'B', 'C', 'E'],
+                          'r5': ['A', 'H', 'K', 'L', 'M'],
+                          'r6': ['A', 'H', 'I', 'J']}
+        in_ = StringIO.StringIO(uc1)
+        actual = uc_consensus_assignments(in_, id_to_taxonomy)
+        self.assertEqual(actual, expected)
+
+    def test_varied_parameters(self):
+        expected = {'q1': (['A', 'B', 'C'], 1.0, 2),
+                    'q2': (['A', 'H'], 1.0, 3),
+                    'q3': (['x'], 1.0, 1),
+                    'q4': (['x'], 1.0, 1),
+                    'q5': (['x'], 1.0, 1)}
+        id_to_taxonomy = {'r1': ['A', 'F', 'G'],
+                          'r2': ['A', 'B', 'C', 'D'],
+                          'r3': ['A', 'H', 'I', 'J'],
+                          'r4': ['A', 'B', 'C', 'E'],
+                          'r5': ['A', 'H', 'K', 'L', 'M'],
+                          'r6': ['A', 'H', 'I', 'J']}
+        in_ = StringIO.StringIO(uc1)
+        actual = uc_consensus_assignments(in_, id_to_taxonomy, 1.0, 'x')
+        self.assertEqual(actual, expected)
+
+
+uc1 = """# uclust --input /Users/caporaso/Dropbox/code/short-read...
+# version=1.2.22
+# Tab-separated fields:
+# 1=Type, 2=ClusterNr, 3=SeqLength or ClusterSize, 4=PctId, ...
+# Record types (field 1): L=LibSeed, S=NewSeed, H=Hit, ...
+# For C and D types, PctId is average id with seed.
+# QueryStart and SeedStart are zero-based relative to start of sequence.
+# If minus strand, SeedStart is relative to reverse-complemented seed.
+N	*	195	*	*	*	*	*	q3	*
+N	*	191	*	*	*	*	*	q4	*
+N	*	192	*	*	*	*	*	q5	*
+L	748	1374	*	*	*	*	*	1081058	*
+H	r3	193	100.0	+	0	0	534I193M787I	q2	r3
+H	r5	193	97.0	+	0	0	534I193M787I	q2	r5
+H	r6	193	97.0	+	0	0	534I193M787I	q2	r6
+L	92734	1541	*	*	*	*	*	4440404	*
+H	r2	189	99.0	+	0	0	531I189M821I	q1	r2
+H	r4	189	100.0	+	0	0	531I189M821I	q1	r4
+"""
+
 
 if __name__ == "__main__":
     main()
