@@ -91,6 +91,8 @@ def _uc_to_taxonomy(uc, taxonomy_map):
         [3] http://drive5.com/usearch/manual/utax_algo.html
 
     """
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso. 
     results = defaultdict(list)
     for line in uc:
         line = line.strip()
@@ -125,6 +127,8 @@ def _compute_consensus_annotations(query_annotations, min_consensus_fraction,
             input taxonomic annotations.
 
     """
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso.
     result = {}
     for query_id, annotations in query_annotations.iteritems():
         consensus_annotation, consensus_fraction = \
@@ -158,6 +162,8 @@ def _compute_consensus_annotation(annotations, min_consensus_fraction,
             Fraction of input annotations that agreed at the deepest
             level of assignment
     """
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso.
     if min_consensus_fraction <= 0.5:
         raise ValueError("min_consensus_fraction must be greater than 0.5.")
     num_input_annotations = len(annotations)

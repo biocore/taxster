@@ -17,6 +17,9 @@ from taxster import uc_consensus_assignments
 
 class ConsensusAnnotationTests(TestCase):
 
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso.
+
     def test_varied_min_fraction(self):
         in_ = [['Ab', 'Bc', 'De'],
                ['Ab', 'Bc', 'Fg', 'Hi'],
@@ -124,6 +127,9 @@ class ConsensusAnnotationTests(TestCase):
 
 class ConsensusAnnotationsTests(TestCase):
 
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso.
+
     def test_varied_fraction(self):
 
         in_ = {'q1': [['A', 'B', 'C', 'D'],
@@ -170,6 +176,9 @@ class ConsensusAnnotationsTests(TestCase):
 
 class UcToAssignments(TestCase):
 
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso.
+
     def test_uc_to_taxonomy(self):
         expected = {'q1': [['A', 'B', 'C', 'D'],
                            ['A', 'B', 'C', 'E']],
@@ -191,6 +200,9 @@ class UcToAssignments(TestCase):
 
 
 class UcConsensusAssignments(TestCase):
+
+    # This code has been ported to taxster from QIIME 1.9.1 with
+    # permission from @gregcaporaso. 
 
     def test_uc_consensus_assignments(self):
         expected = {'q1': (['A', 'B', 'C'], 1.0, 2),
