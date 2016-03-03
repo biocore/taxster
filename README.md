@@ -1,6 +1,8 @@
 taxster: assigning taxonomy to organisms you've never even heard of 
 ===================================================================
 
+![Hipster Bayes](http://i.imgur.com/lyUCFzB.png)
+
 This library contains tools for working with taxonomic assignment data. This should be considered pre-alpha software. **Public APIs can and will change!**
 
 Install
